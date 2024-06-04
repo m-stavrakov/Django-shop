@@ -129,5 +129,4 @@ cython_debug/
 # dotenv
 *.env
 
-# Render
-# render.yaml
+
