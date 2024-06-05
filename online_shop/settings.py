@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-import environ
-env = environ.Env()
-environ.Env.read_env()
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-=l7q9yx_wag5e()qg!2mj2y%o#e6e2k6e3+(fi_(1$cdu08s^('
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -33,7 +32,7 @@ DEBUG = os.environ.get('DEBUG', 'FALSE') == 'TRUE'
 
 ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
-RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME')
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 # Application definition
@@ -82,28 +81,35 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if env('DJANGO_ENV') == 'production':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env('RENDER_DB_NAME'),
-            'USER': env('RENDER_DB_USER'),
-            'PASSWORD': env('RENDER_DB_PASSWORD'),
-            'HOST': env('RENDER_DB_HOST'),
-            'PORT': env('RENDER_DB_PORT'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USER'),
-            'PASSWORD': env('DB_PASSWORD'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT'),
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default="postgresql://martinstavrakov:password@localhost:5432/online_shop_django",
+        conn_max_age=600
+    )
+}
+
+# if env('DJANGO_ENV') == 'production':
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': env('RENDER_DB_NAME'),
+#             'USER': env('RENDER_DB_USER'),
+#             'PASSWORD': env('RENDER_DB_PASSWORD'),
+#             'HOST': env('RENDER_DB_HOST'),
+#             'PORT': env('RENDER_DB_PORT'),
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': env('DB_NAME'),
+#             'USER': env('DB_USER'),
+#             'PASSWORD': env('DB_PASSWORD'),
+#             'HOST': env('DB_HOST'),
+#             'PORT': env('DB_PORT'),
+#         }
+#     }
 
 # if env('DJANGO_ENV') == 'production':
 #     DEBUG = False
