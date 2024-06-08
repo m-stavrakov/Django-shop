@@ -81,12 +81,7 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default="postgresql://martinstavrakov:password@localhost:5432/online_shop_django",
-        conn_max_age=600
-    )
-}
+DATABASES = {"default": dj_database_url.config(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")}  # Loads connection string from DATABASE_URL
 
 # if env('DJANGO_ENV') == 'production':
 #     DATABASES = {
